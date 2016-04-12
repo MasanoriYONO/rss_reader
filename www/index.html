@@ -8,11 +8,13 @@
     <link rel="stylesheet" href="components/loader.css">
     <script src="js/feed-reader.js"></script>
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.2/moment.min.js"></script>
     
     <script>
     // CHANGE YOUR URL HERE!
-    var feedUrl = "http://feeds.bbci.co.uk/news/technology/rss.xml";
-
+    // var feedUrl = "http://feeds.bbci.co.uk/news/technology/rss.xml";
+    var feedUrl = "http://rss.dailynews.yahoo.co.jp/fc/rss.xml";
     $(function() {
         
         var feed = new Feed({
