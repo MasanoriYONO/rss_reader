@@ -43,10 +43,19 @@ var Feed = (function() {
 
                 // Display RSS contents
                 var $rss = $(data);
+                var rss_str = "";
                 $rss.find('item').each(function() {
                     var item = this;
-                    $(self.listEl).append(self.createListElement(item));
+                    var $item = $(item);
+                    var date = new Date($item.find('pubDate').text());  
+                    var m_rss_date = moment(date).format("YYYY-MM-DD HH:mm");
+                    
+                    if(moment().isAfter(m_rss_date)){
+                        rss_str += self.createListElement(item);
+                    }
+                    // $(self.listEl).append(self.createListElement(item));
                 });
+                $(self.listEl).append(rss_str);
             },
             error: function() {
                 $(self.errorEl).text('Failed to load RSS.');
