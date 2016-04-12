@@ -82,9 +82,11 @@ var Feed = (function() {
         var title = this.escape($item.find('title').text());
         var description = this.escape(strip_tags($item.find('description').text()));
         var date = new Date($item.find('pubDate').text());
-
+        
+        var m_rss_date = moment(date).format("YYYY-MM-DD HH:mm");
+        
         return '<li class="feed-item" data-link="' + link + '">' +
-            '<time>' + date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + '</time>' +
+            '<time>' + m_rss_date + '</time>' +
             '<h2>' + title + '</h2><p>' + description + '</p></li>';
     };
 
