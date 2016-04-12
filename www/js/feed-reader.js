@@ -1,6 +1,15 @@
 /**
  * Feed class
  */
+
+function RssFeed(link, title, description, date){
+    this.link = link;
+    this.title = title;
+    this.description = description;
+    this.date = date;
+};
+var array_rss = [];
+
 var Feed = (function() {
     
     var Feed = function(options) {
@@ -40,7 +49,9 @@ var Feed = (function() {
                 data = $.parseXML(data.trim());
 
                 $(self.listEl).empty();
-
+                
+                array_rss = [];
+                
                 // Display RSS contents
                 var $rss = $(data);
                 var rss_str = "";
@@ -50,12 +61,29 @@ var Feed = (function() {
                     var date = new Date($item.find('pubDate').text());  
                     var m_rss_date = moment(date).format("YYYY-MM-DD HH:mm");
                     
-                    if(moment().isAfter(m_rss_date)){
+                    // if(moment().isAfter(m_rss_date)){
                         rss_str += self.createListElement(item);
-                    }
+                    // }
                     // $(self.listEl).append(self.createListElement(item));
                 });
-                $(self.listEl).append(rss_str);
+                // $(self.listEl).append(rss_str);
+                array_rss.sort(function(a,b){
+                    // if(a.date > b.date) return -1;
+                    // if(a.date < b.date) return 1;
+                    
+                    if(moment(a.date).isAfter(b.date)) return -1;
+                    if(moment(a.date).isBefore(b.date)) return 1;
+                    
+                    return 0;
+                });
+                
+                var sorted_rss = "";
+                jQuery.each(array_rss, function()
+                {
+                    sorted_rss += self.createSortedListElement(this);
+                });
+                
+                $(self.listEl).append(sorted_rss);
             },
             error: function() {
                 $(self.errorEl).text('Failed to load RSS.');
@@ -79,6 +107,12 @@ var Feed = (function() {
         });
     };
     
+    Feed.prototype.createSortedListElement = function(item) {
+        
+        return '<li class="feed-item" data-link="' + item.link + '">' +
+            '<time>' + item.date + '</time>' +
+            '<h2>' + item.title + '</h2><p>' + item.description + '</p></li>';
+    };
     /**
      * Create list element
      * @param Array item
@@ -94,6 +128,9 @@ var Feed = (function() {
         
         var m_rss_date = moment(date).format("YYYY-MM-DD HH:mm");
         
+        var t_rss = new RssFeed(link, title, description, m_rss_date);
+        array_rss.push(t_rss);
+ 
         return '<li class="feed-item" data-link="' + link + '">' +
             '<time>' + m_rss_date + '</time>' +
             '<h2>' + title + '</h2><p>' + description + '</p></li>';
